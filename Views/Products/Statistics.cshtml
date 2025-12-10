@@ -1,0 +1,71 @@
+﻿@model InventarioInteligente.Models.StatisticsViewModel
+@{
+    ViewData["Title"] = "Estadísticas";
+}
+
+<h1>Estadísticas de Inventario</h1>
+
+<section class="mb-4">
+    <h3>Productos (de más caro a más barato)</h3>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.OrderedByPriceDesc)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Price.ToString("C")</td>
+                    <td>@p.Stock</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+<section class="mb-4">
+    <h3>Análisis de costos</h3>
+    <p>Precio promedio: <strong>@Model.AveragePrice.ToString("C")</strong></p>
+</section>
+
+<section class="mb-4">
+    <h3>Valor total de inventario</h3>
+    <p>Valor total en inventario: <strong>@Model.TotalInventoryValue.ToString("C")</strong></p>
+</section>
+
+<section class="mb-4">
+    <h3>Alerta de stock crítico (menos de 5 unidades)</h3>
+    @if (!Model.LowStockProducts.Any())
+    {
+        <div class="alert alert-success">No hay productos con stock crítico.</div>
+    }
+    else
+    {
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Stock</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.LowStockProducts)
+                {
+                    <tr>
+                        <td>@p.Name</td>
+                        <td>@p.Stock</td>
+                        <td>@p.Price.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</section>
+
+<a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
